@@ -3,7 +3,7 @@ var foursquare = {
 	'CLIENT_ID' : '[INSERT CLIENT_ID]',
 	'REDIRECT_URI' : '[INSERT REDIRECT URI]',
 	'canvasData' : 'none',
-  
+
 	init : function(){
 		$('.foursquare-btn').attr('href', "javascript:window.open('" + this.getAuthUrl() + "','Foursquare Checkin','width=500,height=150')");
 	},
@@ -17,37 +17,37 @@ var foursquare = {
 	setPhoto : function(canvasData){
 		this.canvasData = canvasData;
 	},
-	checkin : function(){
-		uri = window.location.href;
-		search = '#access_token=';
-		start = uri.indexOf(search);
-		access_token = false;
-	if (start > 0) {
-    	start = start + search.length
-    	access_token = uri.slice(start);
-	}
-	if(access_token){
-		var parent = this;
-    	$.ajax({
-        	url:'https://api.foursquare.com/v2/checkins/add',
-        	data: {oauth_token:access_token,
-        		   v : '20131016',
-        		   venueId : '52f3ae3c11d2a04671e99a2b',
-        		   shout : 'Bag O Shrimp',
-        		   broadcast : 'facebook'
+	checkin : function(venueId, shout, broadcast){
+  		uri = window.location.href;
+  		search = '#access_token=';
+  		start = uri.indexOf(search);
+  		access_token = false;
+    	if (start > 0) {
+        	start = start + search.length
+        	access_token = uri.slice(start);
+    	}
+    	if(access_token){
+    		var parent = this;
+        	$.ajax({
+            	url:'https://api.foursquare.com/v2/checkins/add',
+            	data: {oauth_token:access_token,
+            		   v : '20131016',
+            		   venueId : venueId,
+            		   shout : shout,
+            		   broadcast : broadcast
 
-        	},
-        	type : 'post',
-        	success:function(data){
-          		parent.postImagetoFoursquare(data.response.checkin.id);
-        	},
-        		error: function(jqXHR, textStatus, errorThrown){
-            	console.error(errorThrown);
-        	}
-    	});
-	}
+            	},
+            	type : 'post',
+            	success:function(data){
+              		parent.postImagetoFoursquare(data.response.checkin.id);
+            	},
+            		error: function(jqXHR, textStatus, errorThrown){
+                	console.error(errorThrown);
+            	}
+        	});
+    	}
 
-	},
+  	},
 
 	addPhoto : function(checkinId){
 
